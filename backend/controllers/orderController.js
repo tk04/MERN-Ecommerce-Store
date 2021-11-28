@@ -1,6 +1,6 @@
 import Order from "../models/orderModel.js"
 import AsyncHandler from "express-async-handler"
-
+import { ObjectId } from "mongodb"
 // @desc create new order
 // @route POST /api/orders
 // @access Private
@@ -52,9 +52,17 @@ const updateOrderToPaid = AsyncHandler(async (req,res) => {
     throw new Error("Order not found")
 })
 
+// @desc get logged in user orders
+// @route GET /api/orders/myorders
+// @access Private
+const getMyOrders = AsyncHandler(async (req,res) => {
+    const orders = await Order.find({ user: req.user._id })
+    res.json(orders)
+})
 
 export {
     addOrderItems,
     getOrderById,
-    updateOrderToPaid
+    updateOrderToPaid,
+    getMyOrders
 }
