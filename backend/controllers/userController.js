@@ -122,11 +122,55 @@ const deleteUser = AsyncHandler(async (req,res) => {
     
 })
 
+// @desc get user by id
+// @route GET /api/users/:id
+// @access Private/Admin
+
+const getUserById = AsyncHandler(async (req,res) => {
+    const user = await User.findById(req.params.id).select("-password")
+    if(!user){
+        res.status(404)
+        throw new Error("User not found")
+    }
+    res.json(user)
+})
+
+
+// @desc update user
+// @route PUT /api/users/:id
+// @access Private/Admin
+
+const updateUser = AsyncHandler(async (req,res) => {
+    const user = await User.findById(req.params.id)
+    if(user){
+        const updates = Object.keys(req.body).filter(value => value !== "_id")
+        const allowedUpdates = ["name", "email", "isAdmin"]
+        const isValidOperation = updates.every((update) =>  allowedUpdates.includes(update))
+        if(!isValidOperation){
+            return res.status(400).send({message: "invalid updates"})
+        }
+        updates.forEach(update => user[update] = req.body[update])
+        const updatedUser =  await user.save()
+        return res.json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            isAdmin: updatedUser.isAdmin
+        })
+
+    }
+    res.status(404)
+    throw new Error("User not Found")
+})
+
+
 export {
     authUser,
     getUserProfile,
     registerUser,
     updateUserProfile,
     getUsers,
-    deleteUser
+    deleteUser,
+    getUserById,
+    updateUser
 }
