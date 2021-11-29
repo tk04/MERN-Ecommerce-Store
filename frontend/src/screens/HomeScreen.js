@@ -7,6 +7,8 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import Paginate from "../components/Paginate"
 import ProductCarousel from '../components/ProductCarousel'
+import {Helmet} from "react-helmet"
+import { Link } from "react-router-dom"
 
 const HomeScreen = ({ match }) => {
     const keyword = match.params.keyword
@@ -22,7 +24,11 @@ const HomeScreen = ({ match }) => {
    
     return ( 
         <>
-            {!keyword && <ProductCarousel />}
+            <Helmet>
+                <title>Welcome to ProShop | Home</title>
+                <meta name="description" content="Electronics ecommerce site for everything" />
+            </Helmet>
+            {!keyword ? <ProductCarousel /> : <Link to="/" className="btn btn-light">Go Back</Link>}
             <h1>Latest Products</h1>
             {
                 loading ? (

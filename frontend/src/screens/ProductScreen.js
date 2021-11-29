@@ -7,7 +7,7 @@ import { listProductDetails, createProductReview } from '../actions/productActio
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConst'
-
+import {Helmet} from "react-helmet"
 
 const ProductScreen = ({ history, match }) => {
     const [qty, setQty] = useState(1)
@@ -46,11 +46,15 @@ const ProductScreen = ({ history, match }) => {
 
     return (
         <>
+
             <Link className="btn btn-light my-3" to="/">Go back</Link>
             {
                 loading ? <Loader /> : error ? <Message variant="danger">{error}</Message> :
                 (
                 <>
+                <Helmet>
+                    <title>{`${product.name}`}</title>
+                </Helmet>
                 <Row>
                     <Col md={6}>
                         <Image src={product.image} alt={product.name} fluid/>
