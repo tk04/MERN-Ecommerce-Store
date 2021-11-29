@@ -6,6 +6,7 @@ import Loader from "../components/Loader"
 import { getUserDetails, updateUserDetails } from '../actions/userActions'
 import { listMyOrders } from "../actions/orderActions"
 import { LinkContainer } from "react-router-bootstrap"
+import {USER_UPDATE_RESET} from "../constants/userConst"
 
 const ProfileScreen = ({ history, location }) => {
     const [email, setEmail] = useState("")
@@ -26,7 +27,8 @@ const ProfileScreen = ({ history, location }) => {
         if (!userInfo){
             history.push("/login")
         }else{
-            if(!user.name){
+            if(!user || !user.name || success){
+                dispatch({ type: USER_UPDATE_RESET })
                 dispatch(getUserDetails("profile"))
                 dispatch(listMyOrders())
             }else{
